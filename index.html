@@ -1,464 +1,621 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🫒 La Ruta de las Gildas</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<!DOCTYPE html>                                                                                                                                                                                           
+  <html lang="es">                                                                                                                                                                                          
+  <head>                                  
+  <meta charset="UTF-8">                                                                                                                                                                                    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">                                                                                                                                    
+  <title>La Ruta de las Gildas</title>                                                                                                                                                                      
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">                                         
+  <style>                                                   
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }                                                                                                                               
+   
+    :root {                                                                                                                                                                                                 
+      --ink:     #1A1209;                                   
+      --cream:   #F7F2E8;                                                                                                                                                                                   
+      --gold:    #C9943A;                                                                                                                                                                                   
+      --gold-lt: #E8D5A0;                 
+      --terra:   #8B3A2F;                                                                                                                                                                                   
+      --sage:    #3D5C38;                                                                                                                                                                                   
+      --warm:    #8A7F72;                     
+      --border:  #D8CFBF;                                                                                                                                                                                   
+    }                                                       
+                                                                                                                                                                                                            
+    html, body {                                            
+      height: 100%;                                                                                                                                                                                         
+      background: var(--cream);                             
+      color: var(--ink);                                                                                                                                                                                    
+      font-family: 'DM Sans', sans-serif;                   
+      font-weight: 300;
+      overflow: hidden;                       
+    }                                     
 
-    body {
-      background: #0f0b06;
-      font-family: 'DM Sans', sans-serif;
-      color: #F7F2E8;
-      min-height: 100vh;
-      padding: 24px 16px;
+    .screen {                                                                                                                                                                                               
+      position: absolute;
+      inset: 0;                                                                                                                                                                                             
+      display: flex;                                        
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;                   
+      transition: opacity 0.5s ease;      
     }
+    .screen.active {                                                                                                                                                                                        
+      opacity: 1;
+      pointer-events: all;                                                                                                                                                                                  
+    }                                                       
 
-    .wrap { max-width: 680px; margin: 0 auto; }
-
-    .header {
-      background: #1A1209;
-      border-top: 3px solid #C9943A;
-      border-radius: 8px 8px 0 0;
-      padding: 36px 32px 28px;
-      text-align: center;
+    /* ══ S1: Bienvenida ══ */                
+    #s1 {                                 
+      background: var(--ink);                 
+      align-items: center;                                                                                                                                                                                  
+      justify-content: center;
+    }                                                                                                                                                                                                       
+                                                            
+    .s1-top {                                                                                                                                                                                               
+      width: 100%;                                          
+      flex: 1;                                                                                                                                                                                              
+      display: flex;
+      flex-direction: column;                                                                                                                                                                               
+      align-items: center;                                  
+      justify-content: flex-end;
+      padding-bottom: 2rem;                   
+      border-bottom: 1px solid #2E2920;   
+    }                                         
+                                                                                                                                                                                                            
+    .eyebrow {
+      font-size: 10px;                                                                                                                                                                                      
+      letter-spacing: 4px;                                  
+      text-transform: uppercase;                                                                                                                                                                            
+      color: var(--gold);                                   
+      margin-bottom: 1.8rem;
+    }                                         
+                                          
+    .s1-title {
+      font-family: 'Playfair Display', serif;                                                                                                                                                               
+      font-size: clamp(38px, 8vw, 64px);      
+      color: var(--cream);                                                                                                                                                                                  
+      line-height: 1.05;                                    
+      text-align: center;                                                                                                                                                                                   
+    }                                     
+    .s1-title em { font-style: italic; color: var(--gold); }                                                                                                                                                
+                                                                                                                                                                                                            
+    .s1-sub {                                 
+      margin-top: 1rem;                                                                                                                                                                                     
+      font-size: 13px;                                      
+      color: var(--warm);                                                                                                                                                                                   
+      letter-spacing: 0.5px;
+    }                                                                                                                                                                                                       
+                                                            
+    .s1-bottom {
+      width: 100%;                                                                                                                                                                                          
+      flex: 1;
+      display: flex;                                                                                                                                                                                        
+      flex-direction: column;                               
+      align-items: center;
+      justify-content: center;
+      gap: 1.4rem;                            
+      padding: 2rem;                      
     }
-
-    .header .olive { font-size: 48px; margin-bottom: 10px; }
-
-    h1 {
-      color: #C9943A;
-      font-size: 22px;
-      font-weight: normal;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      color: #b0a48a;
-      font-size: 13px;
-      letter-spacing: 2px;
-      margin-top: 6px;
-    }
-
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    /* Centro de pantalla (wrong day, success, etc.) */
-    .center-screen {
-      background: #1A1209;
-      border-bottom: 3px solid #C9943A;
-      border-radius: 0 0 8px 8px;
-      padding: 60px 32px;
-      text-align: center;
-    }
-
-    .big-emoji { font-size: 64px; margin-bottom: 20px; }
-
-    .center-screen h2 {
-      color: #C9943A;
-      font-size: 22px;
-      font-weight: normal;
+                                                                                                                                                                                                            
+    .field-wrap {                             
+      display: flex;                                                                                                                                                                                        
+      flex-direction: column;                               
+      align-items: center;                                                                                                                                                                                  
+      gap: 8px;
+      width: 100%;                                                                                                                                                                                          
+      max-width: 280px;                                     
+    }                                         
+                                          
+    .field-label {
+      font-size: 10px;                                                                                                                                                                                      
       letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .center-screen p {
-      color: #b0a48a;
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    /* Tarjetas del formulario */
-    .card {
-      background: #1A1209;
-      padding: 20px 24px;
-      margin-top: 3px;
-    }
-
-    .card-title {
-      color: #C9943A;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #3a2e1e;
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      color: #b0a48a;
-      font-size: 11px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin: 14px 0 5px;
-    }
-
+      text-transform: uppercase;                                                                                                                                                                            
+      color: var(--warm);                                   
+    }                                         
+                                          
     input[type="text"],
-    input[type="email"],
-    input[type="url"],
-    input[type="number"],
-    input[type="date"],
-    select {
-      width: 100%;
-      background: #241a0a;
-      border: 1px solid #3a2e1e;
-      color: #F7F2E8;
-      padding: 10px 14px;
-      font-size: 15px;
+    input[type="email"] {                                                                                                                                                                                   
+      background: transparent;
+      border: none;                                                                                                                                                                                         
+      border-bottom: 1px solid #3A3020;                     
+      color: var(--cream);                
       font-family: 'DM Sans', sans-serif;
-      border-radius: 4px;
-      transition: border-color 0.2s;
-    }
-
-    input[type="date"] { color-scheme: dark; }
-
-    input:focus, select:focus {
+      font-size: 16px;                                                                                                                                                                                      
+      font-weight: 300;                   
+      padding: 8px 4px;                                                                                                                                                                                     
+      text-align: center;                                                                                                                                                                                   
+      outline: none;                          
+      width: 100%;                                                                                                                                                                                          
+    }                                                       
+    input[type="text"]::placeholder,                                                                                                                                                                        
+    input[type="email"]::placeholder { color: #3A3020; }
+                                                                                                                                                                                                            
+    input[type="date"] {                                    
+      background: transparent;
+      border: none;                                                                                                                                                                                         
+      border-bottom: 1px solid #3A3020;
+      color: var(--cream);                                                                                                                                                                                  
+      font-family: 'Playfair Display', serif;               
+      font-size: 22px;                    
+      padding: 8px 4px;
+      text-align: center;                                                                                                                                                                                   
       outline: none;
-      border-color: #C9943A;
+      cursor: pointer;                                                                                                                                                                                      
+      width: 100%;                                          
+      color-scheme: dark;                 
     }
-
-    .media-box {
-      background: #1A1209;
-      border: 1px solid #C9943A;
-      padding: 20px 24px;
-      margin-top: 3px;
-      text-align: center;
-    }
-
-    .media-box label {
-      color: #C9943A;
-      font-size: 12px;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
-
-    .media-box input {
-      max-width: 160px;
-      font-size: 24px;
-      text-align: center;
-      background: #0f0b06;
-      border-color: #C9943A;
-    }
-
-    .footer-form {
-      background: #1A1209;
-      border-bottom: 3px solid #C9943A;
-      border-radius: 0 0 8px 8px;
-      padding: 28px;
-      text-align: center;
-      margin-top: 3px;
-    }
-
-    button {
-      background: #C9943A;
-      color: #1A1209;
-      border: none;
-      padding: 16px 48px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
+                                                                                                                                                                                                            
+    .btn-primary {                            
+      background: var(--gold);                                                                                                                                                                              
+      color: var(--ink);                                    
+      border: none;                                                                                                                                                                                         
       font-family: 'DM Sans', sans-serif;
-      letter-spacing: 1px;
-      transition: background 0.2s;
+      font-size: 11px;                                                                                                                                                                                      
+      font-weight: 500;                                     
+      letter-spacing: 3px;
+      text-transform: uppercase;                                                                                                                                                                            
+      padding: 16px 48px;
+      cursor: pointer;                                                                                                                                                                                      
+      transition: background 0.2s, transform 0.1s;          
     }
-
-    button:hover { background: #b8842e; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    select option { background: #241a0a; }
-  </style>
-</head>
-<body>
-<div class="wrap">
-
-  <!-- CABECERA -->
-  <div class="header">
-    <div class="olive">🫒</div>
-    <h1>La Ruta de las Gildas</h1>
-    <p class="subtitle" id="header-sub">Programar una nueva ruta</p>
-  </div>
-
-  <!-- PANTALLA: PROGRAMAR -->
-  <div id="screen-programar" class="screen">
-    <form id="form-programar">
-      <div class="card">
-        <p class="card-title">Nueva Ruta</p>
-        <label>Nombre de la persona</label>
-        <input type="text" name="nombre" placeholder="Ej: Karmenchi" required>
-        <label>Email donde enviar el resumen</label>
-        <input type="email" name="email" placeholder="correo@ejemplo.com" required>
-        <label>Fecha de la ruta</label>
-        <input type="date" name="fecha" required>
-      </div>
-      <div class="footer-form">
-        <button type="submit" id="btn-programar">🫒 Programar la Ruta</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- PANTALLA: EMAIL ENVIADO -->
-  <div id="screen-programado" class="screen">
-    <div class="center-screen">
-      <div class="big-emoji">🫒</div>
-      <h2>¡Ruta programada!</h2>
-      <p>Te hemos enviado un email con el botón para ese día.<br><br>
-      Cuando llegue la fecha, pulsa el botón<br>y podrás introducir los datos de la ruta.</p>
-    </div>
-  </div>
-
-  <!-- PANTALLA: DÍA INCORRECTO -->
-  <div id="screen-wrong" class="screen">
-    <div class="center-screen">
-      <div class="big-emoji">🫒</div>
-      <h2>Todavía no es el momento</h2>
-      <p>Este no es el día de disfrutar de las gildas.<br><br>
-      El formulario solo se abre el día programado.<br>
-      Guarda las fuerzas para entonces.</p>
-    </div>
-  </div>
-
-  <!-- PANTALLA: FORMULARIO PARADAS -->
-  <div id="screen-paradas" class="screen">
-    <form id="form-paradas">
-      <input type="hidden" name="fecha" id="fecha-hidden">
-
-      <div class="card">
-        <p class="card-title">Parada 1</p>
-        <label>Nombre del bar</label>
-        <input type="text" name="p1_bar" placeholder="Ej: Bodega Neus">
-        <label>Rating</label>
-        <select name="p1_rating">
-          <option value="1">★☆☆☆☆ — 1</option>
-          <option value="2">★★☆☆☆ — 2</option>
-          <option value="3">★★★☆☆ — 3</option>
-          <option value="4" selected>★★★★☆ — 4</option>
-          <option value="5">★★★★★ — 5</option>
-        </select>
-        <label>Tiempo (ej: 18:32)</label>
-        <input type="text" name="p1_tiempo" placeholder="18:32">
-        <label>Tiempo en segundos</label>
-        <input type="number" name="p1_seg" placeholder="1112">
-        <label>Google Maps (opcional)</label>
-        <input type="url" name="p1_maps" placeholder="https://maps.app.goo.gl/...">
-      </div>
-
-      <div class="card">
-        <p class="card-title">Parada 2</p>
-        <label>Nombre del bar</label>
-        <input type="text" name="p2_bar" placeholder="Ej: Bar Bocata">
-        <label>Rating</label>
-        <select name="p2_rating">
-          <option value="1">★☆☆☆☆ — 1</option>
-          <option value="2">★★☆☆☆ — 2</option>
-          <option value="3">★★★☆☆ — 3</option>
-          <option value="4" selected>★★★★☆ — 4</option>
-          <option value="5">★★★★★ — 5</option>
-        </select>
-        <label>Tiempo</label>
-        <input type="text" name="p2_tiempo" placeholder="22:10">
-        <label>Tiempo en segundos</label>
-        <input type="number" name="p2_seg" placeholder="1330">
-        <label>Google Maps (opcional)</label>
-        <input type="url" name="p2_maps" placeholder="https://maps.app.goo.gl/...">
-      </div>
-
-      <div class="card">
-        <p class="card-title">Parada 3</p>
-        <label>Nombre del bar</label>
-        <input type="text" name="p3_bar" placeholder="Ej: Bodega Joan">
-        <label>Rating</label>
-        <select name="p3_rating">
-          <option value="1">★☆☆☆☆ — 1</option>
-          <option value="2">★★☆☆☆ — 2</option>
-          <option value="3">★★★☆☆ — 3</option>
-          <option value="4" selected>★★★★☆ — 4</option>
-          <option value="5">★★★★★ — 5</option>
-        </select>
-        <label>Tiempo</label>
-        <input type="text" name="p3_tiempo" placeholder="15:45">
-        <label>Tiempo en segundos</label>
-        <input type="number" name="p3_seg" placeholder="945">
-        <label>Google Maps (opcional)</label>
-        <input type="url" name="p3_maps" placeholder="https://maps.app.goo.gl/...">
-      </div>
-
-      <div class="card">
-        <p class="card-title">Parada 4</p>
-        <label>Nombre del bar</label>
-        <input type="text" name="p4_bar" placeholder="Ej: Morro Fi">
-        <label>Rating</label>
-        <select name="p4_rating">
-          <option value="1">★☆☆☆☆ — 1</option>
-          <option value="2">★★☆☆☆ — 2</option>
-          <option value="3">★★★☆☆ — 3</option>
-          <option value="4" selected>★★★★☆ — 4</option>
-          <option value="5">★★★★★ — 5</option>
-        </select>
-        <label>Tiempo</label>
-        <input type="text" name="p4_tiempo" placeholder="25:00">
-        <label>Tiempo en segundos</label>
-        <input type="number" name="p4_seg" placeholder="1500">
-        <label>Google Maps (opcional)</label>
-        <input type="url" name="p4_maps" placeholder="https://maps.app.goo.gl/...">
-      </div>
-
-      <div class="card">
-        <p class="card-title">Parada 5</p>
-        <label>Nombre del bar</label>
-        <input type="text" name="p5_bar" placeholder="Ej: Bar Anita">
-        <label>Rating</label>
-        <select name="p5_rating">
-          <option value="1">★☆☆☆☆ — 1</option>
-          <option value="2">★★☆☆☆ — 2</option>
-          <option value="3">★★★☆☆ — 3</option>
-          <option value="4" selected>★★★★☆ — 4</option>
-          <option value="5">★★★★★ — 5</option>
-        </select>
-        <label>Tiempo</label>
-        <input type="text" name="p5_tiempo" placeholder="19:20">
-        <label>Tiempo en segundos</label>
-        <input type="number" name="p5_seg" placeholder="1160">
-        <label>Google Maps (opcional)</label>
-        <input type="url" name="p5_maps" placeholder="https://maps.app.goo.gl/...">
-      </div>
-
-      <div class="media-box">
-        <label>Puntuación media global</label>
-        <input type="number" name="media" step="0.1" min="1" max="5" placeholder="4.2" required>
-      </div>
-
-      <div class="footer-form">
-        <button type="submit" id="btn-paradas">🫒 Registrar la Ruta</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- PANTALLA: ÉXITO -->
-  <div id="screen-exito" class="screen">
-    <div class="center-screen">
-      <div class="big-emoji">🫒</div>
-      <h2>¡Ruta registrada!</h2>
-      <p>Pronto recibiréis el resumen por email.<br><br>
-      Que disfrutéis de las gildas.</p>
-    </div>
-  </div>
-
-</div><!-- /wrap -->
-
-<script>
-  const WEBHOOK_PROGRAMAR = 'https://n8n-adriagrau.onrender.com/webhook/programar-gildas';
-  const WEBHOOK_EJECUTAR  = 'https://n8n-adriagrau.onrender.com/webhook/ejecutar-gildas';
-
-  function show(id, subtitle) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (subtitle) document.getElementById('header-sub').textContent = subtitle;
-  }
-
-  function getToday() {
-    const d = new Date();
-    return d.getFullYear() + '-' +
-      String(d.getMonth() + 1).padStart(2, '0') + '-' +
-      String(d.getDate()).padStart(2, '0');
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const fecha = params.get('fecha');
-
-  if (!fecha) {
-    // Sin parámetro → pantalla de programar
-    show('screen-programar', 'Programar una nueva ruta');
-  } else {
-    // Con parámetro → comprobar fecha
-    document.getElementById('fecha-hidden').value = fecha;
-    if (getToday() === fecha) {
-      show('screen-paradas', 'Introduce los datos · ' + fecha);
-    } else {
-      show('screen-wrong', fecha);
+    .btn-primary:hover { background: var(--gold-lt); }                                                                                                                                                      
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.3; cursor: default; }                                                                                                                                                
+                                                            
+    .five-dots { display: flex; gap: 8px; align-items: center; }                                                                                                                                            
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #2E2920; }
+    .dot.gold { background: var(--gold); }                                                                                                                                                                  
+                                                                                                                                                                                                            
+    /* ══ S2: Paradas ══ */                   
+    #s2 { background: var(--cream); flex-direction: column; }                                                                                                                                               
+                                                            
+    .s2-header {                                                                                                                                                                                            
+      padding: 28px 32px 20px;                              
+      border-bottom: 1px solid var(--border);                                                                                                                                                               
+      display: flex;                                                                                                                                                                                        
+      align-items: flex-end;
+      justify-content: space-between;                                                                                                                                                                       
+      flex-shrink: 0;                                       
     }
-  }
+    .s2-header-left .eyebrow { color: var(--gold); margin-bottom: 4px; }                                                                                                                                    
+    .s2-htitle { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--ink); }
+                                                                                                                                                                                                            
+    .progress-line { display: flex; gap: 5px; align-items: center; }
+    .pl-seg { height: 2px; width: 28px; background: var(--border); border-radius: 1px; transition: background 0.4s; }                                                                                       
+    .pl-seg.done { background: var(--gold); }                                                                                                                                                               
+    .pl-seg.active { background: var(--ink); }                                                                                                                                                              
+                                                                                                                                                                                                            
+    .s2-body { flex: 1; overflow-y: auto; padding: 24px 32px; scroll-behavior: smooth; }                                                                                                                    
+    .s2-body::-webkit-scrollbar { width: 3px; }                                                                                                                                                             
+    .s2-body::-webkit-scrollbar-thumb { background: var(--border); }                                                                                                                                        
+                                                                                                                                                                                                            
+    .stop-card {                                            
+      border: 1px solid var(--border);                                                                                                                                                                      
+      border-radius: 2px;                                                                                                                                                                                   
+      margin-bottom: 16px;
+      overflow: hidden;                                                                                                                                                                                     
+      transition: border-color 0.3s, box-shadow 0.3s;       
+      background: #fff;
+    }                                                                                                                                                                                                       
+    .stop-card.is-active { border-color: var(--gold); box-shadow: 0 2px 20px rgba(201,148,58,0.12); }
+    .stop-card.is-done { border-color: var(--sage); background: #F8FBF7; }                                                                                                                                  
+    .stop-card.is-locked { opacity: 0.45; }                                                                                                                                                                 
+                                          
+    .stop-head { display: flex; align-items: center; padding: 16px 20px; gap: 16px; }                                                                                                                       
+    .stop-num {                                                                                                                                                                                             
+      width: 32px; height: 32px; border-radius: 50%;                                                                                                                                                        
+      border: 1.5px solid var(--border);                                                                                                                                                                    
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 14px; color: var(--warm);                                                                                                                          
+      flex-shrink: 0; transition: all 0.3s;                                                                                                                                                                 
+    }                                         
+    .is-active .stop-num { border-color: var(--gold); color: var(--gold); }                                                                                                                                 
+    .is-done .stop-num { border-color: var(--sage); background: var(--sage); color: #fff; font-size: 16px; }                                                                                                
+                                                                                                                                                                                                            
+    .stop-info { flex: 1; }                                                                                                                                                                                 
+    .stop-name { font-size: 15px; font-weight: 500; color: var(--ink); }                                                                                                                                    
+    .stop-meta { font-size: 11px; color: var(--warm); margin-top: 2px; display: flex; align-items: center; gap: 8px; }                                                                                      
+    .stop-meta a { color: var(--gold); text-decoration: none; font-size: 10px; letter-spacing: 1px; }
+    .stop-meta a:hover { text-decoration: underline; }                                                                                                                                                      
+                                                                                                                                                                                                            
+    .stop-badge { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }                                                                                
+    .badge-pending { background: #F0EDE6; color: var(--warm); }                                                                                                                                             
+    .badge-active { background: #FDF5E6; color: var(--gold); }                                                                                                                                              
+    .badge-done { background: #EEF4EC; color: var(--sage); }                                                                                                                                                
+                                                                                                                                                                                                            
+    .stop-body { padding: 0 20px 20px; border-top: 1px solid #F0EDE6; display: none; }                                                                                                                      
+    .is-active .stop-body { display: block; }               
+                                                                                                                                                                                                            
+    .rating-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--warm); margin: 16px 0 10px; }                                                                             
+                                                                                                                                                                                                            
+    .stars { display: flex; gap: 8px; }                                                                                                                                                                     
+    .star { font-size: 28px; cursor: pointer; color: var(--border); transition: color 0.15s, transform 0.1s; user-select: none; line-height: 1; }                                                           
+    .star:hover { transform: scale(1.15); }   
+    .star.lit { color: var(--gold); }                                                                                                                                                                       
+                                                            
+    .timer-row {                                                                                                                                                                                            
+      display: flex; align-items: center; gap: 12px;        
+      margin: 18px 0 20px; padding: 12px 14px;                                                                                                                                                              
+      background: #FAF7F2; border: 1px solid var(--border); border-radius: 2px;
+    }                                                                                                                                                                                                       
+    .timer-icon { font-size: 18px; }                        
+    .timer-info { flex: 1; }                                                                                                                                                                                
+    .timer-label { font-size: 10px; color: var(--warm); letter-spacing: 1.5px; text-transform: uppercase; }                                                                                                 
+    .timer-value { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--ink); letter-spacing: 2px; }                                                                                       
+    .timer-value.over { color: var(--terra); }                                                                                                                                                              
+    .timer-note { font-size: 10px; color: var(--warm); margin-top: 2px; }                                                                                                                                   
+                                          
+    .btn-complete-stop {                                                                                                                                                                                    
+      width: 100%; background: var(--ink); color: var(--cream); border: none;                                                                                                                               
+      font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px;                                                                                                                             
+      text-transform: uppercase; padding: 14px; cursor: pointer; transition: background 0.2s; margin-top: 4px;                                                                                              
+    }                                                       
+    .btn-complete-stop:hover { background: #2E2920; }                                                                                                                                                       
+    .btn-complete-stop:disabled { opacity: 0.3; cursor: default; }                                                                                                                                          
+                                                                                                                                                                                                            
+    .stop-done-summary { padding: 12px 20px; display: none; align-items: center; justify-content: space-between; }                                                                                          
+    .is-done .stop-done-summary { display: flex; }                                                                                                                                                          
+    .done-stars { display: flex; gap: 4px; }                                                                                                                                                                
+    .done-star { font-size: 14px; color: var(--border); }                                                                                                                                                   
+    .done-star.lit { color: var(--gold); }                                                                                                                                                                  
+    .done-time { font-size: 11px; color: var(--warm); }                                                                                                                                                     
+                                                                                                                                                                                                            
+    /* ══ S3: Fin ══ */                   
+    #s3 {                                                                                                                                                                                                   
+      background: var(--ink);                                                                                                                                                                               
+      align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; padding: 40px 32px;                                                                                                                                       
+    }                                                       
+    .s3-icon { font-size: 48px; margin-bottom: 24px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }                                                                                                         
+                                              
+    .s3-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 52px); color: var(--cream); line-height: 1.1; margin-bottom: 8px; }                                                     
+    .s3-title em { color: var(--gold); font-style: italic; }
+    .s3-sub { font-size: 13px; color: var(--warm); margin-bottom: 32px; line-height: 1.6; max-width: 320px; }                                                                                               
+                                                                                                                                                                                                            
+    .s3-summary { width: 100%; max-width: 380px; border: 1px solid #2E2920; border-radius: 2px; overflow: hidden; margin-bottom: 32px; }                                                                    
+    .s3-sum-header { background: #141008; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }                                                                         
+    .s3-sum-header span { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--warm); }                                                                                             
+    .s3-sum-header strong { font-size: 9px; letter-spacing: 2px; color: var(--gold); }                                                                                                                      
+    .s3-sum-row { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid #1E1A12; gap: 12px; }                                                                                    
+    .s3-sum-row:last-child { border-bottom: none; }                                                                                                                                                         
+    .s3-num { font-family: 'Playfair Display', serif; font-size: 11px; color: var(--warm); width: 16px; flex-shrink: 0; }                                                                                   
+    .s3-bar { flex: 1; font-size: 12px; color: var(--cream); }                                                                                                                                              
+    .s3-stars { display: flex; gap: 3px; }                                                                                                                                                                  
+    .s3-star { font-size: 11px; color: #3A3020; }           
+    .s3-star.lit { color: var(--gold); }                                                                                                                                                                    
+    .s3-time { font-size: 11px; color: var(--warm); width: 40px; text-align: right; }
+                                                                                                                                                                                                            
+    .btn-send {                                             
+      background: var(--gold); color: var(--ink); border: none;                                                                                                                                             
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase; padding: 18px 52px;                                                                                                                                   
+      cursor: pointer; transition: background 0.2s, transform 0.1s; width: 100%; max-width: 380px;
+    }                                                                                                                                                                                                       
+    .btn-send:hover { background: var(--gold-lt); }                                                                                                                                                         
+    .btn-send:active { transform: scale(0.98); }
+    .s3-legal { margin-top: 16px; font-size: 10px; color: #3A3020; max-width: 320px; }                                                                                                                      
+                                                            
+    /* ══ S4: Enviado ══ */                                                                                                                                                                                 
+    #s4 {                                                                                                                                                                                                   
+      background: var(--ink); align-items: center; justify-content: center;                                                                                                                                 
+      flex-direction: column; text-align: center; padding: 40px; gap: 20px;                                                                                                                                 
+    }                                                                                                                                                                                                       
+    .sent-circle { width: 80px; height: 80px; border-radius: 50%; border: 1.5px solid var(--sage); display: flex; align-items: center; justify-content: center; font-size: 32px; }
+    .sent-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--cream); }                                                                                                           
+    .sent-sub { font-size: 13px; color: var(--warm); line-height: 1.6; max-width: 280px; }
+  </style>                                                                                                                                                                                                  
+  </head>                                                                                                                                                                                                   
+  <body>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+  <!-- S1: Bienvenida -->                                                                                                                                                                                   
+  <div class="screen active" id="s1">                                                                                                                                                                       
+    <div class="s1-top">                                    
+      <div class="eyebrow">Una aventura especial</div>
+      <h1 class="s1-title">La Ruta<br>de las <em>Gildas</em></h1>
+      <p class="s1-sub">5 paradas · Barcelona · Edición especial</p>                                                                                                                                        
+    </div>                                    
+    <div class="s1-bottom">                                                                                                                                                                                 
+      <div class="field-wrap">                                                                                                                                                                              
+        <div class="field-label">Nombre de la persona</div>                                                                                                                                                 
+        <input type="text" id="nombre" placeholder="Ej: Karmenchi">                                                                                                                                         
+      </div>                                                                                                                                                                                                
+      <div class="field-wrap">                              
+        <div class="field-label">Su email</div>                                                                                                                                                             
+        <input type="email" id="email" placeholder="correo@ejemplo.com">                                                                                                                                    
+      </div>                                                                                                                                                                                                
+      <div class="field-wrap">                                                                                                                                                                              
+        <div class="field-label">¿Cuándo empieza la aventura?</div>
+        <input type="date" id="fecha">                                                                                                                                                                      
+      </div>                              
+      <div class="five-dots">                                                                                                                                                                               
+        <div class="dot"></div><div class="dot"></div>                                                                                                                                                      
+        <div class="dot gold"></div>      
+        <div class="dot"></div><div class="dot"></div>                                                                                                                                                      
+      </div>                                                                                                                                                                                                
+      <button class="btn-primary" id="btnEmpezar" disabled onclick="goToS2()">
+        Empezar la ruta                                                                                                                                                                                     
+      </button>                                             
+    </div>                                                                                                                                                                                                  
+  </div>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+  <!-- S2: Paradas -->                                                                                                                                                                                      
+  <div class="screen" id="s2">                              
+    <div class="s2-header">
+      <div class="s2-header-left">            
+        <div class="eyebrow">La Ruta de las Gildas</div>
+        <div class="s2-htitle">Tus 5 paradas</div>
+      </div>                                                                                                                                                                                                
+      <div class="progress-line" id="progressLine"></div>
+    </div>                                                                                                                                                                                                  
+    <div class="s2-body" id="stopsContainer"></div>                                                                                                                                                         
+  </div>                                      
+                                                                                                                                                                                                            
+  <!-- S3: Completado -->                                   
+  <div class="screen" id="s3">                                                                                                                                                                              
+    <div class="s3-icon">🫒</div>
+    <h2 class="s3-title">¡Lo has<br><em>conseguido!</em></h2>                                                                                                                                               
+    <p class="s3-sub">Has completado la ruta entera. Ahora solo queda un paso para reclamar tu tesoro.</p>
+    <div class="s3-summary" id="s3Summary"></div>                                                                                                                                                           
+    <button class="btn-send" id="btnSend" onclick="sendMail()">
+      Enviar y recibir el regalo ✦                                                                                                                                                                          
+    </button>                                                                                                                                                                                               
+    <p class="s3-legal" id="s3Legal"></p>                                                                                                                                                                   
+  </div>                                                                                                                                                                                                    
+                                                            
+  <!-- S4: Enviado -->                                                                                                                                                                                      
+  <div class="screen" id="s4">                                                                                                                                                                              
+    <div class="sent-circle">✓</div>
+    <div class="sent-title">¡Enviado!</div>                                                                                                                                                                 
+    <div class="sent-sub">Revisa tu email. Hay una sorpresa esperándote dentro.</div>
+  </div>                                      
+                                                                                                                                                                                                            
+  <script>
+  const WEBHOOK_URL = "https://n8n-adriagrau.onrender.com/webhook/ejecutar-gildas";                                                                                                                         
+  const TIEMPO_RECOMENDADO = 20;                            
+                                                                                                                                                                                                            
+  const BARES = [                                           
+    { name: "Bodega Neus",  maps: "https://maps.app.goo.gl/UepWkryABDSaJCz98" },                                                                                                                            
+    { name: "Bar Bocata",   maps: "https://maps.app.goo.gl/YHvD89FqxTP16Mys5" },
+    { name: "Bodega Joan",  maps: "https://maps.app.goo.gl/W4VX7EnY9GWUZL3s9" },                                                                                                                            
+    { name: "Morro Fi",     maps: "https://maps.app.goo.gl/i1K6iZPCRpeJ8Vyv8" },
+    { name: "Bar Anita",    maps: "https://maps.app.goo.gl/xbpfPDywaimvtZzb9" },                                                                                                                            
+  ];                                                                                                                                                                                                        
+                                                                                                                                                                                                            
+  const state = BARES.map(() => ({ rating: 0, startTime: null, elapsed: 0, done: false }));                                                                                                                 
+  let currentStop = 0;                                                                                                                                                                                      
+  let timerInterval = null;                                                                                                                                                                                 
+  let selectedDate = null;                                                                                                                                                                                  
+  let nombreVal = "";                                                                                                                                                                                       
+  let emailVal = "";                                                                                                                                                                                        
+                                                            
+  // S1: validación                                                                                                                                                                                         
+  const fechaInput = document.getElementById("fecha");
+  const nombreInput = document.getElementById("nombre");                                                                                                                                                    
+  const emailInput = document.getElementById("email");      
+  const btnEmpezar = document.getElementById("btnEmpezar");
+                                                                                                                                                                                                            
+  const today = new Date().toISOString().split("T")[0];
+  fechaInput.min = today;                                                                                                                                                                                   
+                                                            
+  function checkForm() {                                                                                                                                                                                    
+    btnEmpezar.disabled = !(fechaInput.value && nombreInput.value && emailInput.value);
+    selectedDate = fechaInput.value;                                                                                                                                                                        
+    nombreVal = nombreInput.value;                                                                                                                                                                          
+    emailVal = emailInput.value;          
+  }                                                                                                                                                                                                         
+                                                                                                                                                                                                            
+  fechaInput.addEventListener("change", checkForm);
+  nombreInput.addEventListener("input", checkForm);                                                                                                                                                         
+  emailInput.addEventListener("input", checkForm);          
+                                          
+  function isToday() {
+    return new Date().toISOString().split("T")[0] === selectedDate;                                                                                                                                         
+  }                                           
+                                                                                                                                                                                                            
+  function formatDateES(d) {                                
+    const [y, m, day] = d.split("-");                                                                                                                                                                       
+    return `${day}/${m}/${y}`;                
+  }                                                                                                                                                                                                         
+                                                            
+  function goToS2() {                                                                                                                                                                                       
+    if (!isToday()) {
+      alert(`Esta ruta está programada para el ${formatDateES(selectedDate)}. ¡Vuelve ese día!`);                                                                                                           
+      return;                                               
+    }                                     
+    document.querySelector("#s2 .eyebrow").textContent = "La ruta de " + nombreVal;                                                                                                                         
+    document.getElementById("s3Legal").textContent =                                                                                                                                                        
+      `Se enviará un email a ${emailVal} con el resumen y una sorpresa.`;                                                                                                                                   
+    showScreen("s2");                                                                                                                                                                                       
+    renderStops();                                                                                                                                                                                          
+    startStopTimer(0);                                                                                                                                                                                      
+  }                                                                                                                                                                                                         
+                                                                                                                                                                                                            
+  // S2: paradas                                                                                                                                                                                            
+  function renderStops() {                                                                                                                                                                                  
+    const container = document.getElementById("stopsContainer");
+    const progress = document.getElementById("progressLine");                                                                                                                                               
+    container.innerHTML = "";                               
+    progress.innerHTML = "";              
 
-  // FORM: Programar
-  document.getElementById('form-programar').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const fd = new FormData(this);
-    const payload = {
-      nombre: fd.get('nombre'),
-      email:  fd.get('email'),
-      fecha:  fd.get('fecha')
-    };
-    const btn = document.getElementById('btn-programar');
-    btn.textContent = 'Enviando...';
-    btn.disabled = true;
-    try {
-      await fetch(WEBHOOK_PROGRAMAR, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      show('screen-programado', 'Ruta programada ✓');
-    } catch (err) {
-      btn.textContent = '🫒 Programar la Ruta';
-      btn.disabled = false;
-      alert('Error: ' + err.message);
-    }
-  });
+    BARES.forEach((bar, i) => {                                                                                                                                                                             
+      const st = state[i];
+      const statusClass = st.done ? "is-done" : (i === currentStop ? "is-active" : "is-locked");                                                                                                            
+                                                            
+      const seg = document.createElement("div");
+      seg.className = "pl-seg" + (st.done ? " done" : (i === currentStop ? " active" : ""));
+      progress.appendChild(seg);                                                                                                                                                                            
+                                                                                                                                                                                                            
+      const card = document.createElement("div");                                                                                                                                                           
+      card.className = `stop-card ${statusClass}`;                                                                                                                                                          
+      card.id = `card-${i}`;                                
+                                                                                                                                                                                                            
+      const numIcon = st.done ? "✓" : (i + 1);
+      const badge = st.done                                                                                                                                                                                 
+        ? `<span class="stop-badge badge-done">Completada</span>`
+        : (i === currentStop                                                                                                                                                                                
+          ? `<span class="stop-badge badge-active">Ahora</span>`
+          : `<span class="stop-badge badge-pending">Pendiente</span>`);                                                                                                                                     
+                                                                                                                                                                                                            
+      let starsHTML = "";                 
+      for (let s = 1; s <= 5; s++) {                                                                                                                                                                        
+        starsHTML += `<span class="star${st.rating >= s ? ' lit' : ''}" onclick="setRating(${i},${s})">★</span>`;                                                                                           
+      }                                       
+                                                                                                                                                                                                            
+      let doneSummaryStars = "";                                                                                                                                                                            
+      for (let s = 1; s <= 5; s++) {                                                                                                                                                                        
+        doneSummaryStars += `<span class="done-star${st.rating >= s ? ' lit' : ''}">★</span>`;                                                                                                              
+      }                                                                                                                                                                                                     
+                                                            
+      card.innerHTML = `                                                                                                                                                                                    
+        <div class="stop-head">                                                                                                                                                                             
+          <div class="stop-num">${numIcon}</div>
+          <div class="stop-info">                                                                                                                                                                           
+            <div class="stop-name">${bar.name}</div>        
+            <div class="stop-meta">
+              Parada ${i+1} de 5                                                                                                                                                                            
+              <a href="${bar.maps}" target="_blank">Ver en Maps ↗</a>
+            </div>                                                                                                                                                                                          
+          </div>                                            
+          ${badge}                                                                                                                                                                                          
+        </div>
+        <div class="stop-done-summary">                                                                                                                                                                     
+          <div class="done-stars">${doneSummaryStars}</div> 
+          <div class="done-time">${st.elapsed ? formatTime(st.elapsed) : ""}</div>                                                                                                                          
+        </div>                                              
+        <div class="stop-body">
+          <div class="rating-label">Valora la gilda</div>                                                                                                                                                   
+          <div class="stars" id="stars-${i}">${starsHTML}</div>
+          <div class="timer-row">                                                                                                                                                                           
+            <div class="timer-icon">⏱</div>                 
+            <div class="timer-info">                                                                                                                                                                        
+              <div class="timer-label">Tiempo en el bar</div>                                                                                                                                               
+              <div class="timer-value" id="timer-${i}">00:00</div>                                                                                                                                          
+              <div class="timer-note">Recomendado: ${TIEMPO_RECOMENDADO} min</div>                                                                                                                          
+            </div>                                          
+          </div>                                                                                                                                                                                            
+          <button class="btn-complete-stop" id="btnStop-${i}" onclick="completeStop(${i})" disabled>
+            Completar parada ${i+1}                                                                                                                                                                         
+          </button>                                         
+        </div>                                                                                                                                                                                              
+      `;                                                                                                                                                                                                    
+      container.appendChild(card);
+    });                                                                                                                                                                                                     
+  }                                                         
+                                                                                                                                                                                                            
+  function setRating(stopIdx, rating) {                     
+    if (stopIdx !== currentStop) return;
+    state[stopIdx].rating = rating;           
+    document.getElementById(`stars-${stopIdx}`).querySelectorAll(".star").forEach((star, i) => {
+      star.classList.toggle("lit", i < rating);
+    });                                                                                                                                                                                                     
+    document.getElementById(`btnStop-${stopIdx}`).disabled = false;
+  }                                                                                                                                                                                                         
+                                                            
+  function startStopTimer(idx) {                                                                                                                                                                            
+    if (timerInterval) clearInterval(timerInterval);        
+    state[idx].startTime = Date.now();                                                                                                                                                                      
+    timerInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - state[idx].startTime) / 1000);                                                                                                                               
+      state[idx].elapsed = elapsed;                         
+      const el = document.getElementById(`timer-${idx}`);
+      if (el) {                                                                                                                                                                                             
+        el.textContent = formatTime(elapsed);
+        el.classList.toggle("over", elapsed / 60 > TIEMPO_RECOMENDADO);                                                                                                                                     
+      }                                                                                                                                                                                                     
+    }, 1000);                             
+  }                                                                                                                                                                                                         
+                                                                                                                                                                                                            
+  function completeStop(idx) {
+    clearInterval(timerInterval);                                                                                                                                                                           
+    state[idx].elapsed = Math.floor((Date.now() - state[idx].startTime) / 1000);
+    state[idx].done = true;                   
+                                          
+    if (idx < BARES.length - 1) {             
+      currentStop = idx + 1;                                                                                                                                                                                
+      renderStops();
+      startStopTimer(currentStop);                                                                                                                                                                          
+      setTimeout(() => {                                    
+        const nextCard = document.getElementById(`card-${currentStop}`);                                                                                                                                    
+        if (nextCard) nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);                            
+    } else {                                  
+      renderStops();                                                                                                                                                                                        
+      setTimeout(() => showS3(), 600);
+    }                                                                                                                                                                                                       
+  }                                                         
+                                                                                                                                                                                                            
+  function formatTime(secs) {                               
+    const m = Math.floor(secs / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;                                                                                                                                                                                     
+  }                                           
+                                                                                                                                                                                                            
+  // S3: resumen                                            
+  function showS3() {                                                                                                                                                                                       
+    const summary = document.getElementById("s3Summary");
+    const avg = (state.reduce((a, s) => a + s.rating, 0) / state.length).toFixed(1);                                                                                                                        
+    summary.innerHTML = `                                   
+      <div class="s3-sum-header">         
+        <span>Resumen de la ruta</span>
+        <strong>Media: ${avg}/5</strong>                                                                                                                                                                    
+      </div>                              
+    `;                                                                                                                                                                                                      
+    state.forEach((st, i) => {                                                                                                                                                                              
+      let starsHTML = "";                 
+      for (let s = 1; s <= 5; s++) {                                                                                                                                                                        
+        starsHTML += `<span class="s3-star${st.rating >= s ? ' lit' : ''}">★</span>`;                                                                                                                       
+      }                                       
+      const row = document.createElement("div");                                                                                                                                                            
+      row.className = "s3-sum-row";                         
+      row.innerHTML = `                                                                                                                                                                                     
+        <div class="s3-num">${i+1}</div>  
+        <div class="s3-bar">${BARES[i].name}</div>                                                                                                                                                          
+        <div class="s3-stars">${starsHTML}</div>                                                                                                                                                            
+        <div class="s3-time">${formatTime(st.elapsed)}</div>
+      `;                                                                                                                                                                                                    
+      summary.appendChild(row);                                                                                                                                                                             
+    });
+    showScreen("s3");                                                                                                                                                                                       
+  }                                                         
 
-  // FORM: Paradas
-  document.getElementById('form-paradas').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const fd = new FormData(this);
-    const d = {};
-    fd.forEach((v, k) => { d[k] = v; });
+  // Enviar                                                                                                                                                                                                 
+  async function sendMail() {
+    const btn = document.getElementById("btnSend");                                                                                                                                                         
+    btn.textContent = "Enviando...";                        
+    btn.disabled = true;                  
 
-    const paradas = [];
-    for (let i = 1; i <= 5; i++) {
-      if (d['p' + i + '_bar']) {
-        paradas.push({
-          numero: i,
-          bar: d['p' + i + '_bar'],
-          rating: parseInt(d['p' + i + '_rating']),
-          tiempo: d['p' + i + '_tiempo'] || '',
-          tiempo_segundos: parseInt(d['p' + i + '_seg'] || 0),
-          maps: d['p' + i + '_maps'] || ''
-        });
-      }
-    }
+    const avg = (state.reduce((a, s) => a + s.rating, 0) / state.length).toFixed(1);                                                                                                                        
+    const payload = {                     
+      email: emailVal,                                                                                                                                                                                      
+      nombre: nombreVal,                                                                                                                                                                                    
+      fecha: selectedDate,
+      media: avg,                                                                                                                                                                                           
+      paradas: state.map((st, i) => ({                      
+        numero: i + 1,                        
+        bar: BARES[i].name,               
+        maps: BARES[i].maps,
+        rating: st.rating,                                                                                                                                                                                  
+        tiempo: formatTime(st.elapsed),   
+        tiempo_segundos: st.elapsed,                                                                                                                                                                        
+      }))                                                                                                                                                                                                   
+    };                                        
+                                                                                                                                                                                                            
+    try {                                                   
+      await fetch(WEBHOOK_URL, {                                                                                                                                                                            
+        method: "POST",
+        headers: { "Content-Type": "application/json" },                                                                                                                                                    
+        body: JSON.stringify(payload)                       
+      });                                     
+    } catch(e) {                          
+      console.warn("Webhook error:", e);
+    }                                                                                                                                                                                                       
+   
+    showScreen("s4");                                                                                                                                                                                       
+  }                                                         
 
-    if (paradas.length === 0) {
-      alert('Añade al menos una parada.');
-      return;
-    }
-
-    const payload = {
-      fecha: d.fecha,
-      media: parseFloat(d.media),
-      paradas: paradas
-    };
-
-    const btn = document.getElementById('btn-paradas');
-    btn.textContent = 'Enviando...';
-    btn.disabled = true;
-
-    try {
-      await fetch(WEBHOOK_EJECUTAR, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      show('screen-exito', '¡Ruta registrada!');
-    } catch (err) {
-      btn.textContent = '🫒 Registrar la Ruta';
-      btn.disabled = false;
-      alert('Error: ' + err.message);
-    }
-  });
-</script>
-</body>
-</html>
+  function showScreen(id) {                                                                                                                                                                                 
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");                                                                                                                                                    
+  }                                                         
+  </script>                               
+  </body>
+  </html>                                   
