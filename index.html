@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🫒 La Ruta de las Gildas</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0b06;
+      font-family: 'DM Sans', sans-serif;
+      color: #F7F2E8;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .wrap { max-width: 680px; margin: 0 auto; }
+
+    .header {
+      background: #1A1209;
+      border-top: 3px solid #C9943A;
+      border-radius: 8px 8px 0 0;
+      padding: 36px 32px 28px;
+      text-align: center;
+    }
+
+    .header .olive { font-size: 48px; margin-bottom: 10px; }
+
+    h1 {
+      color: #C9943A;
+      font-size: 22px;
+      font-weight: normal;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      color: #b0a48a;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-top: 6px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* Centro de pantalla (wrong day, success, etc.) */
+    .center-screen {
+      background: #1A1209;
+      border-bottom: 3px solid #C9943A;
+      border-radius: 0 0 8px 8px;
+      padding: 60px 32px;
+      text-align: center;
+    }
+
+    .big-emoji { font-size: 64px; margin-bottom: 20px; }
+
+    .center-screen h2 {
+      color: #C9943A;
+      font-size: 22px;
+      font-weight: normal;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .center-screen p {
+      color: #b0a48a;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* Tarjetas del formulario */
+    .card {
+      background: #1A1209;
+      padding: 20px 24px;
+      margin-top: 3px;
+    }
+
+    .card-title {
+      color: #C9943A;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #3a2e1e;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      color: #b0a48a;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 14px 0 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      background: #241a0a;
+      border: 1px solid #3a2e1e;
+      color: #F7F2E8;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="date"] { color-scheme: dark; }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #C9943A;
+    }
+
+    .media-box {
+      background: #1A1209;
+      border: 1px solid #C9943A;
+      padding: 20px 24px;
+      margin-top: 3px;
+      text-align: center;
+    }
+
+    .media-box label {
+      color: #C9943A;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .media-box input {
+      max-width: 160px;
+      font-size: 24px;
+      text-align: center;
+      background: #0f0b06;
+      border-color: #C9943A;
+    }
+
+    .footer-form {
+      background: #1A1209;
+      border-bottom: 3px solid #C9943A;
+      border-radius: 0 0 8px 8px;
+      padding: 28px;
+      text-align: center;
+      margin-top: 3px;
+    }
+
+    button {
+      background: #C9943A;
+      color: #1A1209;
+      border: none;
+      padding: 16px 48px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #b8842e; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    select option { background: #241a0a; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- CABECERA -->
+  <div class="header">
+    <div class="olive">🫒</div>
+    <h1>La Ruta de las Gildas</h1>
+    <p class="subtitle" id="header-sub">Programar una nueva ruta</p>
+  </div>
+
+  <!-- PANTALLA: PROGRAMAR -->
+  <div id="screen-programar" class="screen">
+    <form id="form-programar">
+      <div class="card">
+        <p class="card-title">Nueva Ruta</p>
+        <label>Nombre de la persona</label>
+        <input type="text" name="nombre" placeholder="Ej: Karmenchi" required>
+        <label>Email donde enviar el resumen</label>
+        <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+        <label>Fecha de la ruta</label>
+        <input type="date" name="fecha" required>
+      </div>
+      <div class="footer-form">
+        <button type="submit" id="btn-programar">🫒 Programar la Ruta</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- PANTALLA: EMAIL ENVIADO -->
+  <div id="screen-programado" class="screen">
+    <div class="center-screen">
+      <div class="big-emoji">🫒</div>
+      <h2>¡Ruta programada!</h2>
+      <p>Te hemos enviado un email con el botón para ese día.<br><br>
+      Cuando llegue la fecha, pulsa el botón<br>y podrás introducir los datos de la ruta.</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA: DÍA INCORRECTO -->
+  <div id="screen-wrong" class="screen">
+    <div class="center-screen">
+      <div class="big-emoji">🫒</div>
+      <h2>Todavía no es el momento</h2>
+      <p>Este no es el día de disfrutar de las gildas.<br><br>
+      El formulario solo se abre el día programado.<br>
+      Guarda las fuerzas para entonces.</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA: FORMULARIO PARADAS -->
+  <div id="screen-paradas" class="screen">
+    <form id="form-paradas">
+      <input type="hidden" name="fecha" id="fecha-hidden">
+
+      <div class="card">
+        <p class="card-title">Parada 1</p>
+        <label>Nombre del bar</label>
+        <input type="text" name="p1_bar" placeholder="Ej: Bodega Neus">
+        <label>Rating</label>
+        <select name="p1_rating">
+          <option value="1">★☆☆☆☆ — 1</option>
+          <option value="2">★★☆☆☆ — 2</option>
+          <option value="3">★★★☆☆ — 3</option>
+          <option value="4" selected>★★★★☆ — 4</option>
+          <option value="5">★★★★★ — 5</option>
+        </select>
+        <label>Tiempo (ej: 18:32)</label>
+        <input type="text" name="p1_tiempo" placeholder="18:32">
+        <label>Tiempo en segundos</label>
+        <input type="number" name="p1_seg" placeholder="1112">
+        <label>Google Maps (opcional)</label>
+        <input type="url" name="p1_maps" placeholder="https://maps.app.goo.gl/...">
+      </div>
+
+      <div class="card">
+        <p class="card-title">Parada 2</p>
+        <label>Nombre del bar</label>
+        <input type="text" name="p2_bar" placeholder="Ej: Bar Bocata">
+        <label>Rating</label>
+        <select name="p2_rating">
+          <option value="1">★☆☆☆☆ — 1</option>
+          <option value="2">★★☆☆☆ — 2</option>
+          <option value="3">★★★☆☆ — 3</option>
+          <option value="4" selected>★★★★☆ — 4</option>
+          <option value="5">★★★★★ — 5</option>
+        </select>
+        <label>Tiempo</label>
+        <input type="text" name="p2_tiempo" placeholder="22:10">
+        <label>Tiempo en segundos</label>
+        <input type="number" name="p2_seg" placeholder="1330">
+        <label>Google Maps (opcional)</label>
+        <input type="url" name="p2_maps" placeholder="https://maps.app.goo.gl/...">
+      </div>
+
+      <div class="card">
+        <p class="card-title">Parada 3</p>
+        <label>Nombre del bar</label>
+        <input type="text" name="p3_bar" placeholder="Ej: Bodega Joan">
+        <label>Rating</label>
+        <select name="p3_rating">
+          <option value="1">★☆☆☆☆ — 1</option>
+          <option value="2">★★☆☆☆ — 2</option>
+          <option value="3">★★★☆☆ — 3</option>
+          <option value="4" selected>★★★★☆ — 4</option>
+          <option value="5">★★★★★ — 5</option>
+        </select>
+        <label>Tiempo</label>
+        <input type="text" name="p3_tiempo" placeholder="15:45">
+        <label>Tiempo en segundos</label>
+        <input type="number" name="p3_seg" placeholder="945">
+        <label>Google Maps (opcional)</label>
+        <input type="url" name="p3_maps" placeholder="https://maps.app.goo.gl/...">
+      </div>
+
+      <div class="card">
+        <p class="card-title">Parada 4</p>
+        <label>Nombre del bar</label>
+        <input type="text" name="p4_bar" placeholder="Ej: Morro Fi">
+        <label>Rating</label>
+        <select name="p4_rating">
+          <option value="1">★☆☆☆☆ — 1</option>
+          <option value="2">★★☆☆☆ — 2</option>
+          <option value="3">★★★☆☆ — 3</option>
+          <option value="4" selected>★★★★☆ — 4</option>
+          <option value="5">★★★★★ — 5</option>
+        </select>
+        <label>Tiempo</label>
+        <input type="text" name="p4_tiempo" placeholder="25:00">
+        <label>Tiempo en segundos</label>
+        <input type="number" name="p4_seg" placeholder="1500">
+        <label>Google Maps (opcional)</label>
+        <input type="url" name="p4_maps" placeholder="https://maps.app.goo.gl/...">
+      </div>
+
+      <div class="card">
+        <p class="card-title">Parada 5</p>
+        <label>Nombre del bar</label>
+        <input type="text" name="p5_bar" placeholder="Ej: Bar Anita">
+        <label>Rating</label>
+        <select name="p5_rating">
+          <option value="1">★☆☆☆☆ — 1</option>
+          <option value="2">★★☆☆☆ — 2</option>
+          <option value="3">★★★☆☆ — 3</option>
+          <option value="4" selected>★★★★☆ — 4</option>
+          <option value="5">★★★★★ — 5</option>
+        </select>
+        <label>Tiempo</label>
+        <input type="text" name="p5_tiempo" placeholder="19:20">
+        <label>Tiempo en segundos</label>
+        <input type="number" name="p5_seg" placeholder="1160">
+        <label>Google Maps (opcional)</label>
+        <input type="url" name="p5_maps" placeholder="https://maps.app.goo.gl/...">
+      </div>
+
+      <div class="media-box">
+        <label>Puntuación media global</label>
+        <input type="number" name="media" step="0.1" min="1" max="5" placeholder="4.2" required>
+      </div>
+
+      <div class="footer-form">
+        <button type="submit" id="btn-paradas">🫒 Registrar la Ruta</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- PANTALLA: ÉXITO -->
+  <div id="screen-exito" class="screen">
+    <div class="center-screen">
+      <div class="big-emoji">🫒</div>
+      <h2>¡Ruta registrada!</h2>
+      <p>Pronto recibiréis el resumen por email.<br><br>
+      Que disfrutéis de las gildas.</p>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+  const WEBHOOK_PROGRAMAR = 'https://n8n-adriagrau.onrender.com/webhook/programar-gildas';
+  const WEBHOOK_EJECUTAR  = 'https://n8n-adriagrau.onrender.com/webhook/ejecutar-gildas';
+
+  function show(id, subtitle) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (subtitle) document.getElementById('header-sub').textContent = subtitle;
+  }
+
+  function getToday() {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const fecha = params.get('fecha');
+
+  if (!fecha) {
+    // Sin parámetro → pantalla de programar
+    show('screen-programar', 'Programar una nueva ruta');
+  } else {
+    // Con parámetro → comprobar fecha
+    document.getElementById('fecha-hidden').value = fecha;
+    if (getToday() === fecha) {
+      show('screen-paradas', 'Introduce los datos · ' + fecha);
+    } else {
+      show('screen-wrong', fecha);
+    }
+  }
+
+  // FORM: Programar
+  document.getElementById('form-programar').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    const payload = {
+      nombre: fd.get('nombre'),
+      email:  fd.get('email'),
+      fecha:  fd.get('fecha')
+    };
+    const btn = document.getElementById('btn-programar');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+    try {
+      await fetch(WEBHOOK_PROGRAMAR, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      show('screen-programado', 'Ruta programada ✓');
+    } catch (err) {
+      btn.textContent = '🫒 Programar la Ruta';
+      btn.disabled = false;
+      alert('Error: ' + err.message);
+    }
+  });
+
+  // FORM: Paradas
+  document.getElementById('form-paradas').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    const d = {};
+    fd.forEach((v, k) => { d[k] = v; });
+
+    const paradas = [];
+    for (let i = 1; i <= 5; i++) {
+      if (d['p' + i + '_bar']) {
+        paradas.push({
+          numero: i,
+          bar: d['p' + i + '_bar'],
+          rating: parseInt(d['p' + i + '_rating']),
+          tiempo: d['p' + i + '_tiempo'] || '',
+          tiempo_segundos: parseInt(d['p' + i + '_seg'] || 0),
+          maps: d['p' + i + '_maps'] || ''
+        });
+      }
+    }
+
+    if (paradas.length === 0) {
+      alert('Añade al menos una parada.');
+      return;
+    }
+
+    const payload = {
+      fecha: d.fecha,
+      media: parseFloat(d.media),
+      paradas: paradas
+    };
+
+    const btn = document.getElementById('btn-paradas');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+      await fetch(WEBHOOK_EJECUTAR, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      show('screen-exito', '¡Ruta registrada!');
+    } catch (err) {
+      btn.textContent = '🫒 Registrar la Ruta';
+      btn.disabled = false;
+      alert('Error: ' + err.message);
+    }
+  });
+</script>
+</body>
+</html>
