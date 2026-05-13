@@ -102,6 +102,29 @@
     padding: 2rem;
   }
 
+  .field-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 280px;
+  }
+  input[type="text"], input[type="email"] {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #3A3020;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 8px 4px;
+    text-align: center;
+    outline: none;
+    width: 100%;
+  }
+  input::placeholder { color: #3A3020; }
+
   .date-wrap {
     display: flex;
     flex-direction: column;
@@ -607,6 +630,14 @@
         Una vez enviadas las valoraciones y disfrutada cada gilda, recibirás tu regalo.
       </div>
     </div>
+    <div class="field-wrap">
+      <div class="date-label">Nombre de la persona</div>
+      <input type="text" id="nombre" placeholder="Ej: Karmenchi" />
+    </div>
+    <div class="field-wrap">
+      <div class="date-label">Su email</div>
+      <input type="email" id="email" placeholder="correo@ejemplo.com" />
+    </div>
     <div class="date-wrap">
       <div class="date-label">¿Cuándo empieza la aventura?</div>
       <input type="date" id="fecha" />
@@ -677,16 +708,21 @@ let selectedDate = null;
 
 // ── S1: fecha ────────────────────────────────────────────────
 const fechaInput = document.getElementById("fecha");
+const nombreInput = document.getElementById("nombre");
+const emailInput = document.getElementById("email");
 const btnEmpezar = document.getElementById("btnEmpezar");
 
 // Fecha mínima = hoy
 const today = new Date().toISOString().split("T")[0];
 fechaInput.min = today;
 
-fechaInput.addEventListener("change", () => {
+function checkForm() {
   selectedDate = fechaInput.value;
-  btnEmpezar.disabled = !selectedDate;
-});
+  btnEmpezar.disabled = !(fechaInput.value && nombreInput.value.trim() && emailInput.value.trim());
+}
+fechaInput.addEventListener("change", checkForm);
+nombreInput.addEventListener("input", checkForm);
+emailInput.addEventListener("input", checkForm);
 
 function isToday() {
   const today = new Date().toISOString().split("T")[0];
@@ -898,8 +934,8 @@ async function sendMail() {
 
   const avg = (state.reduce((a, s) => a + s.rating, 0) / state.length).toFixed(1);
   const payload = {
-    email: EMAIL,
-    nombre: "Karmenchi",
+    email: emailInput.value,
+    nombre: nombreInput.value,
     fecha: selectedDate,
     media: avg,
     paradas: state.map((st, i) => ({
